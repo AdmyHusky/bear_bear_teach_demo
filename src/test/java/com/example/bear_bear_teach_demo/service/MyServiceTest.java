@@ -1,21 +1,25 @@
 package com.example.bear_bear_teach_demo.service;
 
-import org.junit.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.Assert.*;
 
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class MyServiceTest {
 
-    @InjectMocks
+    @Spy
     private MyService myService;
 
     @Test
-    public void addCalculatorCalculateTest () {
+    @DisplayName("Should success calculate")
+    void addCalculatorCalculateTest () {
 
         int assertResult = myService.addCalculator(2,3);
         assertEquals(5,assertResult);

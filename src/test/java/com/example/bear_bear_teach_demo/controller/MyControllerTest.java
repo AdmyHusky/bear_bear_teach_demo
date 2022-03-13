@@ -51,7 +51,7 @@ public class MyControllerTest {
 
     @Test
     public void successHiBearTest() throws Exception {
-        mockMvc.perform(get("/v1/bear_bear_teach/hiBear")
+        mockMvc.perform(get("/v1/bearBearTeach/hiBear")
                         .contentType("application/json"))
                         .andExpect(status().isOk())
                         .andExpect(content().string(containsString("Hi Bear")));
