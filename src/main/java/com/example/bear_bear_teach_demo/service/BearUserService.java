@@ -26,8 +26,8 @@ public class BearUserService {
         bearUserRepository.save(bearUser);
     }
 
-    public BearUser findByBearId(Long id) throws Exception {
-        BearUser bearUser = bearUserRepository.findAllById(id);
+    public BearUser findByBearId(Long id) {
+        BearUser bearUser = bearUserRepository.findById(id).get();
         return bearUser != null ? bearUser : null;
     }
 

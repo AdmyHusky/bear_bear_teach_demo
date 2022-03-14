@@ -20,55 +20,39 @@ public class BearController {
     @Autowired
     private BearUserRepository bearUserRepository;
 
-    //insert user
-    @PostMapping()
-    public ResponseEntity<?> insertBearUser (@RequestBody BearUser bearUser) {
-        try {
-            bearUserService.addBearUser(bearUser);
-            return ResponseEntity.ok("insert success");
-        }catch (Exception ex) {
-            return ResponseEntity.badRequest().body(ex);
-        }
+    //find All User
+    @GetMapping("/bearUsers")
+    public List<BearUser> bearUsers() {
+        return bearUserService.findlistAll();
     }
 
     //find by id
-    @GetMapping("/{id}")
+    @GetMapping("/bearUsers/{id}")
     public ResponseEntity<?> findById (@PathVariable Long id) {
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("x-developer", "Admy");
-
-        try {
             return ResponseEntity.ok(bearUserService.findByBearId(id));
-//                 ResponseEntity.ok().headers(headers).body(bearUserService.findByBearId(id));
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
-        }
+    }
+
+    //insert user
+    @PostMapping("/bearUsers")
+    public ResponseEntity<?> insertBearUser (@RequestBody BearUser bearUser) throws Exception {
+            bearUserService.addBearUser(bearUser);
+            return ResponseEntity.ok("insert success");
+
     }
 
     //delete user
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/bearUsers")
     public ResponseEntity<?> deleteBearUser (@PathVariable Long id) {
         return bearUserService.deleteBearUser(id) ? ResponseEntity.ok().build()
                 : ResponseEntity.notFound().build();
     }
 
     //update user
-    @PutMapping("/{id}")
+    @PutMapping("/bearUsers/{id}")
     public ResponseEntity<?> updateBearUser (@PathVariable Long id,
-                                             @RequestBody BearUser bearUser) {
-        try {
+                                             @RequestBody BearUser bearUser) throws Exception {
             BearUser updateBearUser = bearUserService.updateBearUser(id,bearUser);
             return ResponseEntity.ok(updateBearUser);
-        } catch (Exception ex) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-    //find All User
-    @GetMapping("/bearUsers")
-    public List<BearUser> list() {
-        return bearUserService.findlistAll();
     }
 
 }
