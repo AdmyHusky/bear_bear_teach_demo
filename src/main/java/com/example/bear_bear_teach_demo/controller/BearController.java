@@ -41,17 +41,16 @@ public class BearController {
     }
 
     //delete user
-    @DeleteMapping("/bearUsers")
+    @DeleteMapping("/bearUsers/{id}")
     public ResponseEntity<?> deleteBearUser (@PathVariable Long id) {
         return bearUserService.deleteBearUser(id) ? ResponseEntity.ok().build()
                 : ResponseEntity.notFound().build();
     }
 
     //update user
-    @PutMapping("/bearUsers/{id}")
-    public ResponseEntity<?> updateBearUser (@PathVariable Long id,
-                                             @RequestBody BearUser bearUser) throws Exception {
-            BearUser updateBearUser = bearUserService.updateBearUser(id,bearUser);
+    @PutMapping("/bearUsers")
+    public ResponseEntity<?> updateBearUser (@RequestBody BearUser bearUser) throws Exception {
+            BearUser updateBearUser = bearUserService.updateBearUser(bearUser);
             return ResponseEntity.ok(updateBearUser);
     }
 

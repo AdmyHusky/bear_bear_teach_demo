@@ -42,8 +42,8 @@ public class BearUserService {
 
     }
 
-    public BearUser updateBearUser(Long id, BearUser bearUserRq) throws Exception {
-        BearUser findBearUser = bearUserRepository.findById(id).get();
+    public BearUser updateBearUser( BearUser bearUserRq) throws Exception {
+        BearUser findBearUser = bearUserRepository.findById(bearUserRq.getId()).get();
         return findBearUser != null ? bearUserRepository.save(bearUserRq) : null;
     }
 
