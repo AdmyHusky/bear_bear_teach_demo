@@ -23,7 +23,7 @@ public class BearController {
     //find All User
     @GetMapping("/bearUsers")
     public List<BearUser> bearUsers() {
-        return bearUserService.findlistAll();
+        return bearUserService.findAll();
     }
 
     //find by id

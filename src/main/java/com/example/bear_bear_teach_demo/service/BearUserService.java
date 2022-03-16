@@ -46,7 +46,7 @@ public class BearUserService {
         return findBearUser != null ? bearUserRepository.save(bearUserRq) : null;
     }
 
-    public List<BearUser> findlistAll() {
+    public List<BearUser> findAll() {
         return bearUserRepository.findAll();
     }
 }

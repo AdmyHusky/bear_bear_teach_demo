@@ -3,10 +3,9 @@ package com.example.bear_bear_teach_demo.service;
 import com.example.bear_bear_teach_demo.Repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import info.solidsoft.mockito.java8.api.WithBDDMockito;
-import org.hamcrest.Matcher;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +16,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class BearUserServiceTest implements WithBDDMockito {
@@ -49,7 +47,7 @@ public class BearUserServiceTest implements WithBDDMockito {
         given(repo.findAll()).willReturn(bearUsers);
 
         //when
-        List<BearUser> actual = bearUserService.findlistAll();
+        List<BearUser> actual = bearUserService.findAll();
 
         //then
         then(repo).should(times(1)).findAll();
@@ -63,4 +61,55 @@ public class BearUserServiceTest implements WithBDDMockito {
         MatcherAssert.assertThat(actual.get(1), Matchers.hasProperty("lastName",Matchers.is("Bear")));
         MatcherAssert.assertThat(actual.get(1), Matchers.hasProperty("age",Matchers.is(20)));
     }
+
+    @Test
+    @DisplayName("Should success to find by id")
+    void Should_SuccessToFindById() {
+        //given
+        BearUser user = gen(1L, "Ice", "Bear", 22);
+        given(repo.findById(1L)).willReturn(Optional.of(user));
+
+        //when
+        BearUser actual = bearUserService.findByBearId(1L);
+
+        //then
+        then(repo).should(times(1)).findById(1L);
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("id",Matchers.is(1L)));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("firstName",Matchers.is("Ice")));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("lastName",Matchers.is("Bear")));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("age",Matchers.is(22)));
+    }
+
+    @Test
+    @DisplayName("Should success to insert")
+    void Should_SuccessToInsert() throws Exception {
+        //given
+        BearUser user = gen(1L, "Ice", "Bear", 22);
+        given(repo.save(user)).willReturn(user);
+
+        //when
+        bearUserService.addBearUser(user);
+
+        //then
+        then(repo).should(times(1)).save(user);
+        then(repo).should(never()).saveAndFlush(user);
+
+    }
+
+    @Test
+    @DisplayName("Should success to delete")
+    void Should_SuccessToDelete() {
+        //given
+        willDoNothing().given(repo).deleteById(anyLong());
+
+        //when
+        Boolean actual = bearUserService.deleteBearUser(anyLong());
+
+        //then
+        then(repo).should(times(1)).deleteById(anyLong());
+        then(repo).should(never()).deleteAll();
+        Assertions.assertEquals(true, actual);
+
+    }
+
 }
