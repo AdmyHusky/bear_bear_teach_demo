@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -26,8 +27,8 @@ public class BearUserService {
     }
 
     public BearUser findByBearId(Long id) {
-        BearUser bearUser = bearUserRepository.findById(id).get();
-        return bearUser != null ? bearUser : null;
+        return bearUserRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("findByBearId Service does not exist for id = %s!", id)));
     }
 
     public boolean deleteBearUser(Long id) {
@@ -41,8 +42,9 @@ public class BearUserService {
 
     }
 
-    public BearUser updateBearUser( BearUser bearUserRq) throws Exception {
-        BearUser findBearUser = bearUserRepository.findById(bearUserRq.getId()).get();
+    public BearUser updateBearUser( BearUser bearUserRq) {
+        BearUser findBearUser = bearUserRepository.findById(bearUserRq.getId())
+                .orElseThrow(() -> new EntityNotFoundException(String.format("updateBearUser Service does not exist for id = %s!", bearUserRq.getId())));;
         return findBearUser != null ? bearUserRepository.save(bearUserRq) : null;
     }
 

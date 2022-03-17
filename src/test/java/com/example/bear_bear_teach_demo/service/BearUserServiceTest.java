@@ -13,10 +13,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+
+import static org.aspectj.bridge.MessageUtil.fail;
 
 @ExtendWith(MockitoExtension.class)
 public class BearUserServiceTest implements WithBDDMockito {
@@ -110,6 +113,59 @@ public class BearUserServiceTest implements WithBDDMockito {
         then(repo).should(never()).deleteAll();
         Assertions.assertEquals(true, actual);
 
+    }
+
+    @Test
+    @DisplayName("Should success to update")
+    void Should_SuccessToUpdate() {
+        //given
+        BearUser user = gen(1L, "Ice", "Bear", 22);
+        BearUser updateUser = gen(1L, "Panda", "Bear", 22);
+
+        given(repo.findById(anyLong())).willReturn(Optional.of(user));
+        given(repo.save(any(BearUser.class))).willReturn(updateUser);
+
+        //when
+        BearUser actual = bearUserService.updateBearUser(updateUser);
+
+        //then
+        then(repo).should(times(1)).findById(anyLong());
+        then(repo).should(times(1)).save(updateUser);
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("id",Matchers.is(1L)));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("firstName",Matchers.is("Panda")));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("lastName",Matchers.is("Bear")));
+        MatcherAssert.assertThat(actual, Matchers.hasProperty("age",Matchers.is(22)));
+
+    }
+
+    @Test
+    @DisplayName("Should can not findById to update")
+    void Should_Can_Not_FindById_To_Update() {
+        //given
+        BearUser updateUser = gen(1L, "Panda", "Bear", 22);
+
+        given(repo.findById(anyLong())).willReturn(Optional.ofNullable(null));
+
+        //when
+        try {
+            bearUserService.updateBearUser(updateUser);
+        } catch (EntityNotFoundException foundException) {
+            fail("updateBearUser Service does not exist for id = "+updateUser.getId()+"!");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail findById")
+    void Should_Fail_FindById() {
+        //given
+        given(repo.findById(anyLong())).willReturn(Optional.ofNullable(null));
+
+        //when
+        try {
+            bearUserService.findByBearId(anyLong());
+        } catch (EntityNotFoundException foundException) {
+
+        }
     }
 
 }
