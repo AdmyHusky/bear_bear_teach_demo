@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
@@ -256,14 +258,31 @@ public class BearUserServiceTest implements WithBDDMockito {
     @DisplayName("Should fail to insert age")
     void Should_FailToInsert_Age() throws Exception {
         //given
-        BearUser user3 = gen(1L, "Ice", "Bear", 0);
+        BearUser user = gen(1L, "Ice", "Bear", 0);
 
         //when
         try {
-            bearUserService.addBearUser(user3);
+            bearUserService.addBearUser(user);
         } catch (Exception ex) {
             fail("Age can be a positive integer");
         }
+    }
+
+    @Test
+    @DisplayName("Should Return Fail Delete BearUser")
+    void Should_ReturnFail_DeleteBearUser() throws DataAccessException {
+        //given
+        BearUser user = new BearUser();
+        user.setFirstName("Ice");
+        user.setLastName("Bear");
+        user.setAge(22);
+
+        //when
+        Boolean actual = bearUserService.deleteBearUser(user.getId());
+//        when(bearUserService.deleteBearUser(user.getId())).thenThrow(RuntimeException.class);
+
+        //then
+        Assertions.assertEquals(false, actual);
     }
 
 }

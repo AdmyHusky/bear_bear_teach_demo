@@ -3,6 +3,8 @@ package com.example.bear_bear_teach_demo.service;
 import com.example.bear_bear_teach_demo.Repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +33,16 @@ public class BearUserService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("findByBearId Service does not exist for id = %s!", id)));
     }
 
-    public boolean deleteBearUser(Long id) {
+    public boolean deleteBearUser(Long id) throws DataAccessException {
         try {
-            bearUserRepository.deleteById(id);
-            return true;
+            if (id != null) {
+                bearUserRepository.deleteById(id);
+                return true;
+            }
         } catch (EmptyResultDataAccessException ex) {
-            System.out.println("Cannot delete by id: " + id);
-            return false;
+            throw new DataRetrievalFailureException("Don't have id: " + id + " to delete");
         }
-
+        return false;
     }
 
     public BearUser updateBearUser( BearUser bearUserRq) {
