@@ -16,9 +16,9 @@ public class BearUserService {
     private BearUserRepository bearUserRepository;
 
     public void addBearUser(BearUser bearUser) throws Exception {
-        if (bearUser.getFirstName() == null || bearUser.getFirstName().isEmpty()) {
+        if (bearUser.getFirstName() == null || bearUser.getFirstName().isBlank()) {
             throw new Exception("First name must be null");
-        } else if (bearUser.getLastName() == null || bearUser.getLastName().isEmpty()) {
+        } else if (bearUser.getLastName() == null || bearUser.getLastName().isBlank()) {
             throw new Exception("Last name must be null");
         } else if (bearUser.getAge() <= 0) {
             throw new Exception("Age can be a positive integer");

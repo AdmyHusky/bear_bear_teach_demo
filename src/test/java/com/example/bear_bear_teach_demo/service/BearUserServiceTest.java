@@ -168,4 +168,102 @@ public class BearUserServiceTest implements WithBDDMockito {
         }
     }
 
+    @Test
+    @DisplayName("Should fail to insert first name null")
+    void Should_FailToInsert_FirstName_Null() throws Exception {
+        //given
+        BearUser user1 = gen(1L, null, "Bear", 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user1);
+        } catch (Exception ex) {
+            fail("First name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert first name empty")
+    void Should_FailToInsert_FirstName_Empty() throws Exception {
+        //given
+        BearUser user2 = gen(1L, "", "Bear", 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user2);
+        } catch (Exception ex) {
+            fail("First name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert first name blank")
+    void Should_FailToInsert_FirstName_Blank() throws Exception {
+        //given
+        BearUser user3 = gen(1L, " ", "Bear", 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user3);
+        } catch (Exception ex) {
+            fail("First name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert last name null")
+    void Should_FailToInsert_LastName_Null() throws Exception {
+        //given
+        BearUser user1 = gen(1L, "Ice", null, 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user1);
+        } catch (Exception ex) {
+            fail("Last name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert last name empty")
+    void Should_FailToInsert_LastName_Empty() throws Exception {
+        //given
+        BearUser user2 = gen(1L, "Ice", "", 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user2);
+        } catch (Exception ex) {
+            fail("Last name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert last name blank")
+    void Should_FailToInsert_LastName_Blank() throws Exception {
+        //given
+        BearUser user3 = gen(1L, "Ice", " ", 22);
+
+        //when
+        try {
+            bearUserService.addBearUser(user3);
+        } catch (Exception ex) {
+            fail("Last name must be null");
+        }
+    }
+
+    @Test
+    @DisplayName("Should fail to insert age")
+    void Should_FailToInsert_Age() throws Exception {
+        //given
+        BearUser user3 = gen(1L, "Ice", "Bear", 0);
+
+        //when
+        try {
+            bearUserService.addBearUser(user3);
+        } catch (Exception ex) {
+            fail("Age can be a positive integer");
+        }
+    }
+
 }
