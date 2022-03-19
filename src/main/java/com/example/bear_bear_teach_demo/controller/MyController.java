@@ -1,14 +1,9 @@
 package com.example.bear_bear_teach_demo.controller;
 
-import com.example.bear_bear_teach_demo.Repository.BearUserRepository;
-import com.example.bear_bear_teach_demo.model.BearUser;
-import com.example.bear_bear_teach_demo.service.BearUserService;
 import com.example.bear_bear_teach_demo.service.MyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/v1/bearBearTeach")

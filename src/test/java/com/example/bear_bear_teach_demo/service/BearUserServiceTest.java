@@ -1,6 +1,6 @@
 package com.example.bear_bear_teach_demo.service;
 
-import com.example.bear_bear_teach_demo.Repository.BearUserRepository;
+import com.example.bear_bear_teach_demo.repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import info.solidsoft.mockito.java8.api.WithBDDMockito;
 import org.hamcrest.MatcherAssert;
@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.EmptyResultDataAccessException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;

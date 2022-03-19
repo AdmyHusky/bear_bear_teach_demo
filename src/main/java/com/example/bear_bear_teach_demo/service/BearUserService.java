@@ -1,6 +1,6 @@
 package com.example.bear_bear_teach_demo.service;
 
-import com.example.bear_bear_teach_demo.Repository.BearUserRepository;
+import com.example.bear_bear_teach_demo.repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
