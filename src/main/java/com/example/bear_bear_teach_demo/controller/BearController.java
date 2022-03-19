@@ -1,23 +1,19 @@
 package com.example.bear_bear_teach_demo.controller;
 
-import com.example.bear_bear_teach_demo.repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import com.example.bear_bear_teach_demo.service.BearUserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/v1/bear")
 public class BearController {
 
-    @Autowired
-    private BearUserService bearUserService;
-
-    @Autowired
-    private BearUserRepository bearUserRepository;
+    private final BearUserService bearUserService;
 
     //find All User
     @GetMapping("/bearUsers")

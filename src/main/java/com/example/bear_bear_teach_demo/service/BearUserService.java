@@ -2,7 +2,7 @@ package com.example.bear_bear_teach_demo.service;
 
 import com.example.bear_bear_teach_demo.repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -12,10 +12,10 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BearUserService {
-    
-    @Autowired
-    private BearUserRepository bearUserRepository;
+
+    private final BearUserRepository bearUserRepository;
 
     public void addBearUser(BearUser bearUser) throws Exception {
         if (bearUser.getFirstName() == null || bearUser.getFirstName().isBlank()) {
