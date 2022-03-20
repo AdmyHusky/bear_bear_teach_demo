@@ -39,7 +39,7 @@ public class MyControllerTest {
         mockMvc.perform(get("/v1/bearBearTeach?a=1&b=2")
                         .contentType("application/json"))
                         .andExpect(status().isOk())
-                        .andExpect(content().string(containsString("3")));;
+                        .andExpect(content().string(containsString("3")));
     }
 
     @Test

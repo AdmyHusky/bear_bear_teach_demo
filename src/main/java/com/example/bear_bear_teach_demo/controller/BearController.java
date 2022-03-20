@@ -45,8 +45,7 @@ public class BearController {
     //update user
     @PutMapping("/bearUsers")
     public ResponseEntity<?> updateBearUser (@RequestBody BearUser bearUser) throws Exception {
-            BearUser updateBearUser = bearUserService.updateBearUser(bearUser);
-            return ResponseEntity.ok(updateBearUser);
+            return ResponseEntity.ok().body(bearUserService.updateBearUser(bearUser));
     }
 
 }

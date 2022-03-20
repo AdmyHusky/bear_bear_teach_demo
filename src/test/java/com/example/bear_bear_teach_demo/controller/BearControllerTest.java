@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -65,6 +66,7 @@ class BearControllerTest implements WithBDDMockito {
         mvc
                 .perform(get("/v1/bear/bearUsers").contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                //then
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$", hasSize(2)))
@@ -76,6 +78,85 @@ class BearControllerTest implements WithBDDMockito {
                 .andExpect(jsonPath("$[1].firstName", Matchers.is("Panda")))
                 .andExpect(jsonPath("$[1].lastName", Matchers.is("Bear")))
                 .andExpect(jsonPath("$[1].age", Matchers.is(20)));
+
+    }
+
+    @Test
+    @DisplayName("Should success to find by id")
+    void Should_SuccessToFindById() throws Exception {
+        //given
+        BearUser user2 = gen(2L, "Panda", "Bear", 20);
+        given(bearUserService.findByBearId(2L))
+                .willReturn(user2);
+
+        //when
+        mvc
+                .perform(get("/v1/bear/bearUsers/2").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                //then
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(jsonPath("$.id", Matchers.is(2)))
+                .andExpect(jsonPath("$.firstName", Matchers.is("Panda")))
+                .andExpect(jsonPath("$.lastName", Matchers.is("Bear")))
+                .andExpect(jsonPath("$.age", Matchers.is(20)));
+
+    }
+
+    @Test
+    @DisplayName("Should success to insert")
+    void Should_SuccessToInsert() throws Exception {
+        //given
+        BearUser user = gen(2L, "Panda", "Bear", 20);
+        doNothing().when(bearUserService).addBearUser(user);
+        //when
+        mvc
+                .perform(post("/v1/bear/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", Matchers.is("insert success")));
+
+
+    }
+
+    @Test
+    @DisplayName("Should success to delete")
+    void Should_SuccessToDelete() throws Exception {
+        //given
+        given(bearUserService.deleteBearUser(2L))
+                .willReturn(true);
+        //when
+        mvc
+                .perform(delete("/v1/bear/bearUsers/2").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                //then
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("")));
+
+    }
+
+    @Test
+    @DisplayName("Should success to update")
+    void Should_SuccessToUpdate() throws Exception {
+        //given
+        BearUser user = gen(1L, "Panda", "Bear", 20);
+        given(bearUserService.updateBearUser(user))
+                .willReturn(user);
+        ObjectMapper mapper = new ObjectMapper();
+        //when
+        mvc
+                .perform(put("/v1/bear/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.firstName", Matchers.is("Panda")))
+                .andExpect(jsonPath("$.lastName", Matchers.is("Bear")))
+                .andExpect(jsonPath("$.age", Matchers.is(20)));
 
     }
 
