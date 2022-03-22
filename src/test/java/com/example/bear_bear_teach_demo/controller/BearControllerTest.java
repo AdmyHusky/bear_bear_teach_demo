@@ -1,5 +1,6 @@
 package com.example.bear_bear_teach_demo.controller;
 
+import com.example.bear_bear_teach_demo.exception.NotFoundException;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import com.example.bear_bear_teach_demo.service.BearUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -9,6 +10,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -117,7 +119,7 @@ class BearControllerTest implements WithBDDMockito {
                 .andDo(print())
                 //then
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", Matchers.is("insert success")));
+                .andExpect(content().string(containsString("insert success")));
 
 
     }
@@ -158,6 +160,119 @@ class BearControllerTest implements WithBDDMockito {
                 .andExpect(jsonPath("$.lastName", Matchers.is("Bear")))
                 .andExpect(jsonPath("$.age", Matchers.is(20)));
 
+    }
+
+    @Test
+    @DisplayName("should Request method not supported patch")
+    public void Should_Request_Method_Not_Supported_Patch() throws Exception {
+        //given
+        BearUser user = gen(1L, "Panda", "Bear", 20);
+        given(bearUserService.updateBearUser(user))
+                .willReturn(user);
+        ObjectMapper mapper = new ObjectMapper();
+        //when
+        mvc
+                .perform(patch("/v1/bear/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isMethodNotAllowed());
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist delete")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_Delete() throws Exception {
+        //given
+        BearUser user = gen(1L, "Panda", "Bear", 20);
+        Mockito.doThrow(new NotFoundException("Don't have id: " + user.getId() + " to delete")).when(bearUserService).deleteBearUser(user.getId());
+        //when
+        mvc
+                .perform(delete("/bearUsers/" + user.getId().toString()).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist byId")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_ById() throws Exception {
+        //given
+        BearUser user = gen(1L, "Panda", "Bear", 20);
+        Mockito.doThrow(new NotFoundException("findByBearId Service does not exist for " + user.getId() + "!")).when(bearUserService).findByBearId(user.getId());
+        //when
+        mvc
+                .perform(get("/bearUsers/" + user.getId().toString()).contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist update")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_Update() throws Exception {
+        //given
+        BearUser user = gen(1L, "Panda", "Bear", 20);
+        Mockito.doThrow(new NotFoundException("findByBearId Service does not exist for " + user.getId() + "!")).when(bearUserService).updateBearUser(user);
+        //when
+        mvc
+                .perform(put("/bearUsers").contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist addBearUser firstname")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_AddBearUser_FirstName() throws Exception {
+        //given
+        BearUser user = gen(1L, "", "Bear", 20);
+        Mockito.doThrow(new NotFoundException("First name must be null")).when(bearUserService).addBearUser(user);
+        //when
+        mvc
+                .perform(post("/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("")));
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist addBearUser lastname")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_AddBearUser_LastName() throws Exception {
+        //given
+        BearUser user = gen(1L, "Ice", "", 20);
+        Mockito.doThrow(new NotFoundException("Last name must be null")).when(bearUserService).addBearUser(user);
+        //when
+        mvc
+                .perform(post("/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("")));
+
+    }
+
+    @Test
+    @DisplayName("should throw exception when user doesn't exist addBearUser age")
+    public void Should_Throw_Exception_When_User_Does_Not_Exist_AddBearUser_Age() throws Exception {
+        //given
+        BearUser user = gen(1L, "Ice", "Bear", 0);
+        Mockito.doThrow(new NotFoundException("Age can be a positive integer")).when(bearUserService).addBearUser(user);
+        //when
+        mvc
+                .perform(post("/bearUsers")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(toJsonString(user)))
+                .andDo(print())
+                //then
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(containsString("")));
     }
 
 }

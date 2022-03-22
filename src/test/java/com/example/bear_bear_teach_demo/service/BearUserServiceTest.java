@@ -1,5 +1,6 @@
 package com.example.bear_bear_teach_demo.service;
 
+import com.example.bear_bear_teach_demo.exception.NotFoundException;
 import com.example.bear_bear_teach_demo.repository.BearUserRepository;
 import com.example.bear_bear_teach_demo.model.BearUser;
 import info.solidsoft.mockito.java8.api.WithBDDMockito;
@@ -14,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -150,7 +150,7 @@ public class BearUserServiceTest implements WithBDDMockito {
         //when
         try {
             bearUserService.updateBearUser(updateUser);
-        } catch (EntityNotFoundException foundException) {
+        } catch (NotFoundException foundException) {
             fail("updateBearUser Service does not exist for id = "+updateUser.getId()+"!");
         }
     }
@@ -164,105 +164,105 @@ public class BearUserServiceTest implements WithBDDMockito {
         //when
         try {
             bearUserService.findByBearId(anyLong());
-        } catch (EntityNotFoundException foundException) {
+        } catch (NotFoundException foundException) {
 
         }
     }
 
     @Test
     @DisplayName("Should fail to insert first name null")
-    void Should_FailToInsert_FirstName_Null() throws Exception {
+    void Should_FailToInsert_FirstName_Null() {
         //given
         BearUser user1 = gen(1L, null, "Bear", 22);
 
         //when
         try {
             bearUserService.addBearUser(user1);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("First name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert first name empty")
-    void Should_FailToInsert_FirstName_Empty() throws Exception {
+    void Should_FailToInsert_FirstName_Empty() {
         //given
         BearUser user2 = gen(1L, "", "Bear", 22);
 
         //when
         try {
             bearUserService.addBearUser(user2);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("First name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert first name blank")
-    void Should_FailToInsert_FirstName_Blank() throws Exception {
+    void Should_FailToInsert_FirstName_Blank() {
         //given
         BearUser user3 = gen(1L, " ", "Bear", 22);
 
         //when
         try {
             bearUserService.addBearUser(user3);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("First name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert last name null")
-    void Should_FailToInsert_LastName_Null() throws Exception {
+    void Should_FailToInsert_LastName_Null() {
         //given
         BearUser user1 = gen(1L, "Ice", null, 22);
 
         //when
         try {
             bearUserService.addBearUser(user1);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("Last name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert last name empty")
-    void Should_FailToInsert_LastName_Empty() throws Exception {
+    void Should_FailToInsert_LastName_Empty() {
         //given
         BearUser user2 = gen(1L, "Ice", "", 22);
 
         //when
         try {
             bearUserService.addBearUser(user2);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("Last name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert last name blank")
-    void Should_FailToInsert_LastName_Blank() throws Exception {
+    void Should_FailToInsert_LastName_Blank() {
         //given
         BearUser user3 = gen(1L, "Ice", " ", 22);
 
         //when
         try {
             bearUserService.addBearUser(user3);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("Last name must be null");
         }
     }
 
     @Test
     @DisplayName("Should fail to insert age")
-    void Should_FailToInsert_Age() throws Exception {
+    void Should_FailToInsert_Age() {
         //given
         BearUser user = gen(1L, "Ice", "Bear", 0);
 
         //when
         try {
             bearUserService.addBearUser(user);
-        } catch (Exception ex) {
+        } catch (NotFoundException ex) {
             fail("Age can be a positive integer");
         }
     }
